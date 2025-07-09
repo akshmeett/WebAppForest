@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Forest Cover Type Prediction</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2f3e46;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .radio-group, .dropdown-group {
+      margin-top: 10px;
+    }
+    .radio-group label {
+      display: inline-block;
+      margin-right: 15px;
+    }
+    .btn {
+      background-color: #2f3e46;
+      color: white;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    .result {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 20px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Forest Cover Type Prediction</h1>
+    <form action="/predict" method="post">
+      <!-- Core 10 features -->
+      <label>Elevation</label><input type="number" name="Elevation" required>
+      <label>Aspect</label><input type="number" name="Aspect" required>
+      <label>Slope</label><input type="number" name="Slope" required>
+      <label>Horizontal Distance To Hydrology</label><input type="number" name="Horizontal_Distance_To_Hydrology" required>
+      <label>Vertical Distance To Hydrology</label><input type="number" name="Vertical_Distance_To_Hydrology" required>
+      <label>Horizontal Distance To Roadways</label><input type="number" name="Horizontal_Distance_To_Roadways" required>
+      <label>Hillshade 9am</label><input type="number" name="Hillshade_9am" required>
+      <label>Hillshade Noon</label><input type="number" name="Hillshade_Noon" required>
+      <label>Hillshade 3pm</label><input type="number" name="Hillshade_3pm" required>
+      <label>Horizontal Distance To Fire Points</label><input type="number" name="Horizontal_Distance_To_Fire_Points" required>
+
+      <!-- Wilderness Area (only one can be selected) -->
+      <label>Wilderness Area</label>
+      <div class="radio-group">
+        {% for i in range(4) %}
+          <label><input type="radio" name="Wilderness_Area_{{i}}" value="1" {% if i == 0 %}checked{% endif %}> Area {{i+1}}</label>
+        {% endfor %}
+      </div>
+
+      <!-- Soil Type (select one) -->
+      <label>Soil Type</label>
+      <div class="dropdown-group">
+        <select name="soil_type_dropdown" required>
+          {% for i in range(40) %}
+            <option value="{{i}}">Soil Type {{i}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="btn">Predict</button>
+    </form>
+
+    {% if prediction %}
+      <div class="result">
+        <strong>Prediction:</strong> {{ prediction }}
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
